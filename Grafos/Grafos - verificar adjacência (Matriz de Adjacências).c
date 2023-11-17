@@ -13,7 +13,8 @@ struct GrafoMA{
 Obs.: para a implementação da solução, pode ser utilizado o código (TAD) apresentado em aula.
 
 Input Format
-A primeira linha contém o número de vértices seguido pela respectiva matriz de adjacência. A linha seguinte faz n sucessivas chamadas da função verificaAdjacencia passando como parâmetro os índices de 2 vértices.
+A primeira linha contém o número de vértices seguido pela respectiva matriz de adjacência. 
+A linha seguinte faz n sucessivas chamadas da função verificaAdjacencia passando como parâmetro os índices de 2 vértices.
 
 Output Format
 A saída deve imprimir sim ou não para cada chamada da função verificaAdjacencia
