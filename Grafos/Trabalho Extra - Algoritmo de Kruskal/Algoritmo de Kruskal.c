@@ -46,7 +46,6 @@ typedef struct Cell{
     struct Cell *next;
 }Cell;
 
-
 typedef struct FilaE{
     Cell *inicio;
     Cell *fim;
@@ -63,7 +62,6 @@ Cell *criar_celula(int key, int peso)
     return c;
 }
 
-
 FilaE *criar_filaE()
 {
     FilaE *f = (FilaE*) malloc(sizeof(FilaE));
@@ -74,12 +72,10 @@ FilaE *criar_filaE()
     return f;
 }
 
-
 int filaE_vazia(FilaE* f)
 {
     return (f == NULL) || (f->inicio == NULL);
 }
-
 
 void enfileirar(int key, FilaE* f)
 {
@@ -98,7 +94,6 @@ void enfileirar(int key, FilaE* f)
     }
 
 }
-
 
 int desenfileirar(FilaE* f)
 {
@@ -119,7 +114,6 @@ int desenfileirar(FilaE* f)
     return item;
 }
 
-
 void imprimir_fila(FilaE* f)
 {
     Cell *aux;
@@ -138,7 +132,6 @@ void imprimir_fila(FilaE* f)
     }
 }
 
-
 int liberar_filaE(FilaE* f){
     if (!filaE_vazia(f))
     {
@@ -152,7 +145,6 @@ int liberar_filaE(FilaE* f){
 
     return 0;
 }
-/***************************************************************/
 
 typedef struct Lista{
     struct Cell *head;
@@ -166,10 +158,10 @@ typedef struct GrafoLA{
     int *d; //descoberta
     Lista **adj;
 }GrafoLA;
-/***************************************************************/
+
 // Lista encadeada
 
-Lista* criar_lista()
+Lista *criar_lista()
 {
     Lista* l = (Lista*) malloc(sizeof(Lista));
 
@@ -182,7 +174,6 @@ int lista_vazia(Lista *l)
 {
     return (l == NULL) || (l->head == NULL);
 }
-
 
 int procurar(int key, Lista *l)
 {
@@ -201,7 +192,6 @@ int procurar(int key, Lista *l)
     else
         return 0;
 }
-
 
 void inserir_na_lista(int key, Lista *l, int peso)
 {
@@ -241,7 +231,6 @@ void inserir_na_lista(int key, Lista *l, int peso)
         }
     }
 }
-
 
 int remover_na_lista(int key, Lista *l, int peso)
 {
@@ -288,7 +277,6 @@ int remover_na_lista(int key, Lista *l, int peso)
         return 0;
 }
 
-
 void imprimir(Lista *l)
 {
     Cell *aux;
@@ -305,7 +293,6 @@ void imprimir(Lista *l)
         }
     }
 }
-
 
 int liberar_lista(Lista *l)
 {
@@ -331,11 +318,9 @@ int liberar_lista(Lista *l)
     return 0;
 }
 
-
-/***************************************************************/
 // Grafo
 
-static Lista** iniciar_LA(int n)
+static Lista **iniciar_LA(int n)
 {
     int i;
     Lista **adj = (Lista**) malloc(n * sizeof(Lista*));
@@ -346,8 +331,7 @@ static Lista** iniciar_LA(int n)
     return adj;
 }
 
-
-GrafoLA* iniciar_grafoLA(int v)
+GrafoLA *iniciar_grafoLA(int v)
 {
     GrafoLA* G = (GrafoLA*) malloc(sizeof(GrafoLA));
 
@@ -376,7 +360,6 @@ int aresta_existeLA(GrafoLA* G, int v1, int v2)
     return 0;
 }
 
-
 void inserir_arestaLA(GrafoLA* G, int v1, int v2, int peso)
 {
     if (!aresta_existeLA(G, v1, v2))
@@ -388,7 +371,6 @@ void inserir_arestaLA(GrafoLA* G, int v1, int v2, int peso)
     }
 }
 
-
 void remover_arestaLA(GrafoLA* G, int v1, int v2, int peso)
 {
     if (aresta_existeLA(G, v1, v2))
@@ -399,7 +381,6 @@ void remover_arestaLA(GrafoLA* G, int v1, int v2, int peso)
 
     }
 }
-
 
 void imprimir_arestasLA(GrafoLA* G)
 {
@@ -420,7 +401,6 @@ void imprimir_arestasLA(GrafoLA* G)
 
         }
 }
-
 
 void liberarGLA(GrafoLA* G)
 {
