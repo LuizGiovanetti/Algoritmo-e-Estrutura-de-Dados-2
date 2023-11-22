@@ -457,65 +457,6 @@ void heapSort(int *v, int n)
     }
 }
 
-
-void busca_largura(GrafoLA *G, int s)
-{
-    int u, v;
-    
-    if(valida_vertice(G, s))
-    {
-        for(v = 0; v < G->V; v++)
-        {
-            G->cor[v] = 0;
-            G->pai[v] = -1;
-            G->d[v] = INT_MAX;
-        }
-        
-        G->cor[s] = 1; //cinza
-        G->d[s] = 0;
-        
-        FilaE *f = criar_filaE();
-        enfileirar(s, f);
-        
-        while(!filaE_vazia(f))
-        {
-            u = desenfileirar(f);
-            
-            for(v = 0; v < G->V; v++)
-            {
-                if((aresta_existeLA(G, v, u)) && (G->cor[v] == 0))
-                {
-                    G->cor[v] = 1;
-                    G->pai[v] = u;
-                    G->d[v] = G->d[u] + 1;
-                    enfileirar(v, f);
-                }
-            }
-            
-            G->cor[u] = 2; //preto
-        }
-        
-        printf("v d p\n");
-        
-        for(v = 0; v < G->V; v++)
-        {
-            printf("%d ", v);
-            
-            if(G->d[v] < INT_MAX)
-                printf("%d ", G->d[v]);
-            else
-                printf("- ");
-            
-            if(G->pai[v] >= 0)
-                printf("%d\n", G->pai[v]);
-            else
-                printf("-\n");
-        }
-        
-        liberar_filaE(f);
-    }
-}
-
 int main(void)
 {
     int V, qntA, a1, a2, peso;
