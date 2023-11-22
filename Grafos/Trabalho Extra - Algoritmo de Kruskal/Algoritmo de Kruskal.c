@@ -42,6 +42,7 @@ Como o algoritmo deve ser iniciada a partir do vértice "0", então a primeira l
 
 typedef struct Cell{
     int key;
+    int peso;
     struct Cell *next;
 }Cell;
 
@@ -51,17 +52,19 @@ typedef struct FilaE{
     Cell *fim;
 }FilaE;
 
-Cell* criar_celula(int key)
+Cell *criar_celula(int key, int peso)
 {
     Cell *c = (Cell*) malloc(sizeof(Cell));
     c->key = key;
+    c->peso = peso;
 
     c->next = NULL;
 
     return c;
 }
 
-FilaE* criar_filaE()
+
+FilaE *criar_filaE()
 {
     FilaE *f = (FilaE*) malloc(sizeof(FilaE));
     
@@ -71,10 +74,12 @@ FilaE* criar_filaE()
     return f;
 }
 
+
 int filaE_vazia(FilaE* f)
 {
     return (f == NULL) || (f->inicio == NULL);
 }
+
 
 void enfileirar(int key, FilaE* f)
 {
@@ -93,6 +98,7 @@ void enfileirar(int key, FilaE* f)
     }
 
 }
+
 
 int desenfileirar(FilaE* f)
 {
@@ -113,6 +119,7 @@ int desenfileirar(FilaE* f)
     return item;
 }
 
+
 void imprimir_fila(FilaE* f)
 {
     Cell *aux;
@@ -131,6 +138,7 @@ void imprimir_fila(FilaE* f)
     }
 }
 
+
 int liberar_filaE(FilaE* f){
     if (!filaE_vazia(f))
     {
@@ -144,6 +152,7 @@ int liberar_filaE(FilaE* f){
 
     return 0;
 }
+/***************************************************************/
 
 typedef struct Lista{
     struct Cell *head;
@@ -157,7 +166,7 @@ typedef struct GrafoLA{
     int *d; //descoberta
     Lista **adj;
 }GrafoLA;
-
+/***************************************************************/
 // Lista encadeada
 
 Lista* criar_lista()
@@ -173,6 +182,7 @@ int lista_vazia(Lista *l)
 {
     return (l == NULL) || (l->head == NULL);
 }
+
 
 int procurar(int key, Lista *l)
 {
@@ -192,7 +202,8 @@ int procurar(int key, Lista *l)
         return 0;
 }
 
-void inserir_na_lista(int key, Lista *l)
+
+void inserir_na_lista(int key, Lista *l, int peso)
 {
     Cell *auxA, *auxP;
     Cell* c;
@@ -202,16 +213,15 @@ void inserir_na_lista(int key, Lista *l)
         if (l == NULL)
             l = criar_lista();
 
-        l->head = criar_celula(key);
+        l->head = criar_celula(key, peso);
     }
     else
     {
-        c = criar_celula(key);
+        c = criar_celula(key, peso);
 
         if (l->head->key >= key)
         {
            c->next = l->head;
-
 
            l->head = c;
         }
@@ -232,28 +242,39 @@ void inserir_na_lista(int key, Lista *l)
     }
 }
 
-int remover_na_lista(int key, Lista *l)
+
+int remover_na_lista(int key, Lista *l, int peso)
 {
     Cell *auxA, *auxP;
 
-    if (!lista_vazia(l))
+    if(!lista_vazia(l))
     {
         auxA = l->head;
 
-        if(auxA->key == key)
+        if((auxA->key == key) && (auxA->peso == peso))
+        {
             l->head = l->head->next;
+            free(auxA);
+            
+            return 1;
+        }
         else
         {
             auxP = auxA;
 
-            while((auxA != NULL) && (key < auxA->key))
+            while(((auxA != NULL) && (key < auxA->key)) || ((key == auxA->key) && (peso < auxA->peso)))
             {
                 auxP = auxA;
                 auxA = auxA->next;
             }
 
-            if (auxA->key == key)
+            if((auxA != NULL) && (auxA->key == key) && (auxA->peso == peso))
+            {
                 auxP->next = auxA->next;
+                free(auxA);
+                
+                return 1;
+            }    
             else
                 auxA = NULL;
         }
@@ -266,6 +287,7 @@ int remover_na_lista(int key, Lista *l)
 
         return 0;
 }
+
 
 void imprimir(Lista *l)
 {
@@ -283,6 +305,7 @@ void imprimir(Lista *l)
         }
     }
 }
+
 
 int liberar_lista(Lista *l)
 {
@@ -308,6 +331,8 @@ int liberar_lista(Lista *l)
     return 0;
 }
 
+
+/***************************************************************/
 // Grafo
 
 static Lista** iniciar_LA(int n)
@@ -320,6 +345,7 @@ static Lista** iniciar_LA(int n)
 
     return adj;
 }
+
 
 GrafoLA* iniciar_grafoLA(int v)
 {
@@ -350,26 +376,30 @@ int aresta_existeLA(GrafoLA* G, int v1, int v2)
     return 0;
 }
 
-void inserir_arestaLA(GrafoLA* G, int v1, int v2)
+
+void inserir_arestaLA(GrafoLA* G, int v1, int v2, int peso)
 {
     if (!aresta_existeLA(G, v1, v2))
     {
-        inserir_na_lista(v2, G->adj[v1]);
-        inserir_na_lista(v1, G->adj[v2]);
+        inserir_na_lista(v2, G->adj[v1], peso);
+        inserir_na_lista(v1, G->adj[v2], peso);
+        
         G->A++;
     }
 }
 
-void remover_arestaLA(GrafoLA* G, int v1, int v2)
+
+void remover_arestaLA(GrafoLA* G, int v1, int v2, int peso)
 {
     if (aresta_existeLA(G, v1, v2))
     {
-        remover_na_lista(v2, G->adj[v1]);
-        remover_na_lista(v1, G->adj[v2]);
+        remover_na_lista(v2, G->adj[v1], peso);
+        remover_na_lista(v1, G->adj[v2], peso);
         G->A--;
 
     }
 }
+
 
 void imprimir_arestasLA(GrafoLA* G)
 {
@@ -391,15 +421,20 @@ void imprimir_arestasLA(GrafoLA* G)
         }
 }
 
+
 void liberarGLA(GrafoLA* G)
 {
-    int i;
-
     if (G != NULL)
     {
-        for (i = 0; i < G->V; i++)
+        for (int i = 0; i < G->V; i++)
             liberar_lista(G->adj[i]);
 
+        free(G->adj);
+        
+        free(G->cor);
+        free(G->pai);
+        free(G->d);
+        
         free(G);
     }
 }
@@ -443,9 +478,79 @@ void heapSort(int *v, int n)
 }
 
 
+void busca_largura(GrafoLA *G, int s)
+{
+    int u, v;
+    
+    if(valida_vertice(G, s))
+    {
+        for(v = 0; v < G->V; v++)
+        {
+            G->cor[v] = 0;
+            G->pai[v] = -1;
+            G->d[v] = INT_MAX;
+        }
+        
+        G->cor[s] = 1; //cinza
+        G->d[s] = 0;
+        
+        FilaE *f = criar_filaE();
+        enfileirar(s, f);
+        
+        while(!filaE_vazia(f))
+        {
+            u = desenfileirar(f);
+            
+            for(v = 0; v < G->V; v++)
+            {
+                if((aresta_existeLA(G, v, u)) && (G->cor[v] == 0))
+                {
+                    G->cor[v] = 1;
+                    G->pai[v] = u;
+                    G->d[v] = G->d[u] + 1;
+                    enfileirar(v, f);
+                }
+            }
+            
+            G->cor[u] = 2; //preto
+        }
+        
+        printf("v d p\n");
+        
+        for(v = 0; v < G->V; v++)
+        {
+            printf("%d ", v);
+            
+            if(G->d[v] < INT_MAX)
+                printf("%d ", G->d[v]);
+            else
+                printf("- ");
+            
+            if(G->pai[v] >= 0)
+                printf("%d\n", G->pai[v]);
+            else
+                printf("-\n");
+        }
+        
+        liberar_filaE(f);
+    }
+}
 
 int main(void)
 {
+    int V, qntA, a1, a2, peso;
+    
+    scanf("%d", &V);
+    scanf("%d", &qntA); //quantidade de arestas
+    
+    GrafoLA *G = iniciar_grafoLA(V);
 
+    for(int i = 0; i < V; i++)
+    {
+        scanf("%d %d %d", &a1, &a2, &peso);
+    }
+    
+    liberarGLA(G);
+    
     return 0;
 }
