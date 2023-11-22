@@ -355,7 +355,7 @@ void inserir_arestaLA(GrafoLA* G, int v1, int v2)
     if (!aresta_existeLA(G, v1, v2))
     {
         inserir_na_lista(v2, G->adj[v1]);
-        //inserir_na_lista(v1, G->adj[v2]);
+        inserir_na_lista(v1, G->adj[v2]);
         G->A++;
     }
 }
@@ -441,6 +441,8 @@ void heapSort(int *v, int n)
         heapify(v, i, 0);
     }
 }
+
+
 
 int main(void)
 {
